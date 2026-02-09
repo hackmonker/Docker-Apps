@@ -1,0 +1,20 @@
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    container_name: linkwarden
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - DATABASE_URL=${LINKWARDEN_DB_URL}
+      - NEXT_PUBLIC_DISABLE_REGISTRATION=true
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/linkwarden/data:/data/data
+    depends_on:
+      - postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.linkwarden.rule=Host(`linkwarden.${DOMAIN}`)
+      - traefik.http.services.linkwarden.loadbalancer.server.port=3000

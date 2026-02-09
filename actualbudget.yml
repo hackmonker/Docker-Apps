@@ -1,0 +1,16 @@
+  actualbudget:
+    container_name: actualbudget
+    restart: unless-stopped
+    image: docker.io/actualbudget/actual-server:latest
+    expose:
+      - 5006
+    environment:
+      - ACTUAL_UPLOAD_FILE_SYNC_SIZE_LIMIT_MB=20
+      - ACTUAL_UPLOAD_SYNC_ENCRYPTED_FILE_SYNC_SIZE_LIMIT_MB=50
+      - ACTUAL_UPLOAD_FILE_SIZE_LIMIT_MB=20
+    volumes:
+      - /opt/containers/actualbudget:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.actualbudget.rule=Host(`actualbudget.${DOMAIN}`)
+      - traefik.http.services.actualbudget.loadbalancer.server.port=5006

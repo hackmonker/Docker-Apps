@@ -1,0 +1,12 @@
+  telminal:
+    image: hackmonker/telminal
+    container_name: telminal
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - API_ID=${TELMINAL_API_ID}
+      - API_HASH=${TELMINAL_API_HASH}
+      - TOKEN=${TELMINAL_TOKEN}
+      - ADMINS=${TELMINAL_ADMINS}

@@ -1,0 +1,21 @@
+services:
+  duplicacy:
+    image: azinchen/duplicacy
+    container_name: duplicacy
+    restart: unless-stopped
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - UMASK=$UMASK
+      - TZ=$TZ
+      - BACKUP_CRON=$BACKUP_CRON
+      - SNAPSHOT_ID=$BACKUP_ID
+      - STORAGE_URL=$BACKUP_URL
+      - FILTER_PATTERNS=$BACKUP_FILTERS
+      - DUPLICACY_GCD_TOKEN=$BACKUP_TOKEN
+      - RUN_JOB_IMMEDIATELY=yes
+    volumes:
+      - /opt/containers/duplicacy:/config
+      - /opt:/data
+      - /mnt:/mnt
+      - /opt:/opt

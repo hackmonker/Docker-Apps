@@ -1,0 +1,17 @@
+  sftpgo:
+    image: drakkan/sftpgo:latest
+    container_name: sftpgo
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    expose:
+      - 2022
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/sftpgo/data:/srv/sftpgo
+      - /opt/containers/sftpgo/home:/var/lib/sftpgo
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sftpgo.rule=Host(`dl.${DOMAIN}`)
+      - traefik.http.services.sftpgo.loadbalancer.server.port=2022

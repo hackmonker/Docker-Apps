@@ -1,0 +1,19 @@
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    restart: unless-stopped
+    expose:
+      - 32400
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=${TZ}
+      - PLEX_CLAIM=${PLEX_TOKEN}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/plex/config:/config
+      - /mnt:/mnt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.plex.rule=Host(`plex.${DOMAIN}`)
+      - traefik.http.services.plex.loadbalancer.server.port=32400

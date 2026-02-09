@@ -1,0 +1,17 @@
+  thelounge:
+    image: ghcr.io/thelounge/thelounge:latest
+    container_name: thelounge
+    restart: unless-stopped
+    expose:
+      - 9000
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/thelounge:/var/opt/thelounge
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.thelounge.rule=Host(`lounge.${DOMAIN}`)
+      - traefik.http.services.thelounge.loadbalancer.server.port=9000

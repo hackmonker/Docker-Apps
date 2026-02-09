@@ -1,0 +1,27 @@
+services:
+  termix:
+    image: ghcr.io/lukegus/termix:latest
+    container_name: termix
+    restart: unless-stopped
+    expose:
+      - 8080
+    networks:
+      - t3_proxy
+    volumes:
+      - termix-data:/app/data
+    environment:
+      - PORT=8080
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.termix-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.termix-rtr.rule=Host(`ssh.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.termix-rtr.service=termix-svc"
+      - "traefik.http.services.termix-svc.loadbalancer.server.port=8080"
+      # Middlewares
+      - "traefik.http.routers.termix-rtr.middlewares=chain-authentik@file"
+
+volumes:
+  termix-data:
+    driver: local

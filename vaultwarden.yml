@@ -1,0 +1,32 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    expose:
+       - 80
+    networks:
+      - socket_proxy
+      - t3_proxy
+    user: ${PUID}:${PGID}
+    environment:
+      - TZ=Asia/Kolkata
+      - ADMIN_TOKEN=${VAULTWARDEN_TOKEN}
+      - DATABASE_URL=${VAULTWARDEN_DB_URL}
+      - DOMAIN=https://vaultwarden.${DOMAINNAME}
+    depends_on:
+      - postgres
+    volumes:
+       - ${CONTAINERSDIR}/vaultwarden:/data
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.vaultwarden-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.vaultwarden-rtr.rule=Host(`vaultwarden.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.vaultwarden-rtr.service=vaultwarden-svc"
+      - "traefik.http.services.vaultwarden-svc.loadbalancer.server.port=80"
+      # Middlewares
+      - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-no-auth@file"

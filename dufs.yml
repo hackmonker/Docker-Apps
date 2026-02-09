@@ -1,0 +1,17 @@
+  dufs:
+    image: sigoden/dufs
+    container_name: dufs
+    restart: unless-stopped
+    command: /data -A -a user:pass@/:rw
+    expose:
+      - 5000
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /mnt:/mnt
+      - /opt:/opt
+      - /mnt/webdav:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dufs.rule=Host(`dufs.${DOMAIN}`)
+      - traefik.http.services.dufs.loadbalancer.server.port=5000

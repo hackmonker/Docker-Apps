@@ -1,0 +1,19 @@
+  pyload-ng:
+    image: lscr.io/linuxserver/pyload-ng:latest
+    container_name: pyload-ng
+    restart: unless-stopped
+    expose:
+      - 8000
+      - 9666 #optional
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/pyload-ng:/config
+      - /mnt/drive1/amaterasu-local/downloads/pyload:/downloads
+      labels:
+      - traefik.enable=true
+      - traefik.http.routers.pyload-ng.rule=Host(`pyload.${DOMAIN}`)
+      - traefik.http.services.pyload-ng.loadbalancer.server.port=8000

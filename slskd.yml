@@ -1,0 +1,23 @@
+  slskd:
+    image: slskd/slskd
+    container_name: slskd
+    restart: always
+    expose:
+      - 5030
+      - 5031
+    ports:
+      - 50300:50300
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - SLSKD_REMOTE_CONFIGURATION=true
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/slskd:/app
+      - /mnt:/mnt
+      - /mnt/mergerfs/Media/Music:/music
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.slskd.rule=Host(`soulseek.${DOMAIN}`)
+      - traefik.http.services.slskd.loadbalancer.server.port=5030

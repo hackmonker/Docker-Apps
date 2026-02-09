@@ -1,0 +1,17 @@
+  caddy:
+    image: iarekylew00t/caddy-cloudflare:latest
+    container_name: caddy
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - /opt/containers/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /opt/containers/caddy/data:/data
+      - /opt/containers/caddy/config:/config
+      - /etc/letsencrypt:/etc/letsencrypt

@@ -1,0 +1,12 @@
+  webdav:
+    build: /opt/webdav
+    command: [sh, -cx, "rclone serve webdav teldrive-media:Media --addr :8000 --user ${WEB_DAV_USER} --pass ${WEB_DAV_PASS} --vfs-cache-mode full --vfs-read-chunk-streams=8 --vfs-read-chunk-size=16M --vfs-cache-max-size 20G --config /rclone/rclone.conf"]
+    container_name: webdav
+    restart: unless-stopped
+    expose:
+      - 8000
+    volumes:
+      - ${HOME}/.config/rclone:/rclone
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.alist.rule=Host(`webdav.xd003.cc`)

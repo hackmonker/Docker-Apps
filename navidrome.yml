@@ -1,0 +1,24 @@
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: ${PUID}:${PGID} # should be owner of volumes
+    ports:
+      - 4533
+    restart: unless-stopped
+    environment:
+    - PUID=${PUID}
+    - PGID=${PGID}
+    - TZ=${TZ}
+    - DOMAIN=${DOMAIN}
+      # Optional: put your config options customization here. Examples:
+    - ND_CONFIGFILE=/opt/telebytes/configs/navidrome/navidrome.toml
+    - ND_SESSIONTIMEOUT=24h
+    - ND_BASEURL=https://navidrome.${DOMAIN}
+    volumes:
+      - /opt/containers/navidrome:/data
+      - /mnt/mergerfs/Media/Music:/music:ro
+      - /opt:/opt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.navidrome.rule=Host(`navidrome.${DOMAIN}`)
+      - traefik.http.services.navidrome.loadbalancer.server.port=4533 

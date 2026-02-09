@@ -1,0 +1,20 @@
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+      - LOG_LEVEL=debug
+      - JELLYFIN_TYPE=emby
+    expose:
+      - 5055
+    volumes:
+      - /opt/containers/jellyseer:/app/config
+      - /mnt:/mnt
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jellyseer.rule=Host(`requests.${DOMAIN}`)
+      - traefik.http.services.jellyseer.loadbalancer.server.port=5055

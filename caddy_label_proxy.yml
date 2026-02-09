@@ -1,0 +1,11 @@
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/containers/caddy/caddy_data:/data
+      - /etc/letsencrypt:/etc/letsencrypt

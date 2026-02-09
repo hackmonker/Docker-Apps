@@ -1,0 +1,18 @@
+  alist:
+    image: xhofe/alist:latest
+    container_name: alist
+    restart: unless-stopped
+    expose:
+      - 5244
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=${UMASK}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/alist/data:/opt/alist/data
+      - /opt/containers/alist/storage:/local
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.alist.rule=Host(`alist.${DOMAIN}`)
+      - traefik.http.services.alist.loadbalancer.server.port=5244

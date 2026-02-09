@@ -1,0 +1,24 @@
+  qbt:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbt
+    restart: unless-stopped
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+    expose:
+      - 8080
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/qbt/appdata:/config
+      - /mnt/qbt:/downloads
+      - /mnt/cz/Seed:/GD
+      - ${HOME}/.config/rclone:/rclone
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.qbt.rule=Host(`qbt.${DOMAIN}`)
+      - traefik.http.services.qbt.loadbalancer.server.port=8080

@@ -1,0 +1,18 @@
+  tautulli:
+    image: ghcr.io/hotio/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    expose:
+      - 8181
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=${UMASK}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/tautulli:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tautulli.rule=Host(`tautulli.${DOMAIN}`)
+      - traefik.http.services.tautulli.loadbalancer.server.port=8181

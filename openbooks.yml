@@ -1,0 +1,14 @@
+  openbooks:
+    image: evanbuss/openbooks:latest
+    container_name: openbooks
+    restart: unless-stopped
+    command: --name sexybookniceguy --persist --no-browser-downloads --searchbot searchook --useragent "HexChat 2.9.1"
+    expose:
+      -  80
+    user: "${PUID}:${PGID}"
+    volumes:
+      - /mnt/local/Downloads/Completed/Ebooks:/books/books
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.openbooks.rule=Host(`openbooks.${DOMAIN}`)
+      - traefik.http.services.openbooks.loadbalancer.server.port=80

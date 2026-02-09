@@ -1,0 +1,9 @@
+  cloudflared:
+    image: erisamoe/cloudflared
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=
+    volumes:
+      - /opt/containers/cloudflared:/etc/cloudflared

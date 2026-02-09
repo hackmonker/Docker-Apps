@@ -1,0 +1,34 @@
+services:
+  shelfmark:
+    image: ghcr.io/calibrain/shelfmark:latest
+    container_name: shelfmark
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ} # Optional - path for temporary files
+      - FILE_ORGANIZATION=organize # Optional - file organization method
+      - SEARCH_MODE=universal
+    expose:
+      - 8084
+    networks:
+      - socket_proxy
+      - t3_proxy
+    restart: unless-stopped
+    volumes:
+      - /mnt/local/Downloads/Completed/Ebooks:/books # Default destination for book downloads
+      - /mnt/local/Downloads/Temp/Ebooks:/tmp/shelfmark
+      - /mnt/local/Downloads/Completed/Audiobooks:/audiobooks # Default destination for abook downloads
+      - $CONTAINERSDIR/shelfmark:/config
+      - $CONTAINERSDIR/shelfmark/logs:/var/log # App configuration
+      # Required for torrent / usenet - path must match your download client's volume exactly
+      # - /path/to/downloads:/path/to/downloads
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.shelfmark-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.shelfmark-rtr.rule=Host(`shelfmark.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.shelfmark-rtr.service=shelfmark-svc"
+      - "traefik.http.services.shelfmark-svc.loadbalancer.server.port=8084"
+      # Middlewares
+      - "traefik.http.routers.shelfmark-rtr.middlewares=chain-authentik@file"

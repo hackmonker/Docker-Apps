@@ -1,0 +1,19 @@
+  autoscan-jellyfin:
+    image: cloudb0x/autoscan
+    container_name: autoscan-jellyfin
+    restart: unless-stopped
+    expose:
+      - 3030
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/autoscan/jellyfin-as:/config
+      - /opt/telebytes:/opt/telebytes
+      - /mnt:/mnt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.autoscan-jellyfin.rule=Host(`asjellyfin.${DOMAIN}`)
+      - traefik.http.services.autoscan-jellyfin.loadbalancer.server.port=3030

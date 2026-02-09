@@ -1,0 +1,17 @@
+  jdownloader2:
+    image: antlafarge/jdownloader:alpine
+    container_name: jdownloader
+    restart: unless-stopped
+    volumes:
+      - /opt/containers/jdownloader2/config:/jdownloader/cfg
+      - /mnt/local/Downloads:/jdownloader/downloads
+      - /opt/containers/jdownloader2/logs :/jdownloader/logs #optional
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - "JD_EMAIL=${MYJDOWNLOADER_EMAIL}"
+      - "JD_PASSWORD=${MYJDOWNLOADER_PASSWORD}"
+      - "JD_DEVICENAME=amaterasu"
+    expose:
+      - 3129

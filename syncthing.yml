@@ -1,0 +1,22 @@
+ syncthing:
+   image: lscr.io/linuxserver/syncthing:latest
+   container_name: syncthing
+   restart: unless-stopped
+   hostname: amaterasu #optional
+   ports:
+     - 8384:8384
+     - 22000:22000/tcp
+     - 22000:22000/udp
+     - 21027:21027/udp
+   environment:
+     - PUID=${PUID}
+     - PGID=${PGID}
+     - TZ=${TZ}
+     - DOMAIN=${DOMAIN}
+   volumes:
+     - /opt/containers/syncthing:/config
+     - /mnt/drive1:/mnt/drive1
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.syncthing.rule=Host(`syncthing.${DOMAIN}`)
+      - traefik.http.services.syncthing.loadbalancer.server.port=8384

@@ -1,0 +1,22 @@
+  calibre:
+    image: lscr.io/linuxserver/calibre:latest
+    container_name: calibre
+    restart: unless-stopped
+    expose:
+      - 8080
+      - 8081
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      # - PASSWORD= #optional
+      # - CLI_ARGS= #optional
+    volumes:
+      - /opt/containers/calibre:/config
+      - /mnt:/mnt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.calibre.rule=Host(`calibre.${DOMAIN}`)
+      - traefik.http.services.calibre.loadbalancer.server.port=8080

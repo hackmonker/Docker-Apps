@@ -1,0 +1,19 @@
+  emby:
+    image: lscr.io/linuxserver/emby:beta
+    container_name: emby
+    restart: unless-stopped
+    expose:
+      - 8096
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+      - DOCKER_MODS=linuxserver/mods:emby-mediainfo-plugin
+    volumes:
+      - /opt/containers/emby:/config
+      - /mnt:/mnt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.emby.rule=Host(`emby.${DOMAIN}`)
+      - traefik.http.services.emby.loadbalancer.server.port=8096

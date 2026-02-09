@@ -1,0 +1,14 @@
+  wizarr:
+    image: ghcr.io/wizarrrr/wizarr:beta
+    container_name: wizarr
+    restart: unless-stopped
+    expose:
+      - 5690
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/wizarr/database:/data/database
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wizarr.rule=Host(`invite.${DOMAIN}`)
+      - traefik.http.services.wizarr.loadbalancer.server.port=5690

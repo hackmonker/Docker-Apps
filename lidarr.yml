@@ -1,0 +1,29 @@
+  lidarr:
+    image: youegraillot/lidarr-on-steroids
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=${UMASK}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    expose:
+      - 8686 # Lidarr web UI
+      - 6595 # Deemix web UI
+    volumes:
+      - /opt/containers/lidarr/config:/config
+      - /opt/containers/lidarr/deemix:/config_deemix
+      - /mnt/mergerfs/Downloads/Lidarr:/downloads
+      - /mnt/mergerfs/Media/Music:/music
+      - /mnt:/mnt
+      - /opt:/opt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.lidarr.rule=Host(`lidarr.${DOMAIN}`)
+      - traefik.http.routers.lidarr.service=lidarr-service
+      - traefik.http.services.lidarr-service.loadbalancer.server.port=8686
+
+      - traefik.http.routers.deemix.rule=Host(`deemix.${DOMAIN}`)
+      - traefik.http.routers.deemix.service=deemix-service
+      - traefik.http.services.deemix-service.loadbalancer.server.port=6595

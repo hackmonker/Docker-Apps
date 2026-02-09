@@ -1,0 +1,23 @@
+  swag:
+    image: lscr.io/linuxserver/swag
+    container_name: swag
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 443:443
+      - 80:80
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - URL=domain
+      - CERTPROVIDER=zerossl
+      - DNSPLUGIN=cloudflare #optional
+      - SUBDOMAINS=wildcard
+      - ONLY_SUBDOMAINS=false #optional for no root a record
+      - EXTRA_DOMAINS= #optional for other domains
+      - VALIDATION=dns
+      - DNSPLUGIN=cloudflare
+    volumes:
+      - /home/aptalca/appdata/swag:/config

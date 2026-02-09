@@ -1,0 +1,15 @@
+  mediabot:
+    build: /opt/mediabot
+    command: bash start.sh
+    container_name: mediabot
+    restart: unless-stopped
+    expose:
+      - 8070
+    volumes:
+      - /mnt/local:/output
+      - /opt/mediabot/root:/root
+      - ${HOME}/.config/rclone:/rclone
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mediabot.rule=Host(`nzb.${DOMAIN}`)
+      - traefik.http.services.mediabot.loadbalancer.server.port=8070

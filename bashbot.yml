@@ -1,0 +1,11 @@
+  bashbot:
+    image: hackmonker/bashbot
+    container_name: bashbot
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - /opt/containers/bashbot/config.toml:/BashBot/config.toml
+      - /mnt:/mnt
+      - /opt:/opt

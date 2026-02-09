@@ -1,0 +1,64 @@
+services:
+  booklore:
+    image: booklore/booklore:latest
+    # Alternative: Use GitHub Container Registry
+    # image: ghcr.io/booklore-app/booklore:latest
+    container_name: booklore
+    environment:
+      - USER_ID=${PUID}
+      - GROUP_ID=${PGID}
+      - TZ=${TZ}
+      - DATABASE_URL=${BOOKLORE_DB_URL}
+      - DATABASE_USERNAME=${BOOKLORE_DB_USER}
+      - DATABASE_PASSWORD=${BOOKLORE_DB_PASSWORD}
+      - BOOKLORE_PORT=${BOOKLORE_PORT}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    expose:
+      - "${BOOKLORE_PORT}"
+    networks:
+      - t3_proxy
+    volumes:
+      -  ${CONTAINERSDIR}/booklore:/app/data
+      - /mnt/local/Media/Ebooks:/books
+      - /mnt/local/Downloads/Completed/Ebooks:/bookdrop
+    healthcheck:
+      test: wget -q -O - http://localhost:${BOOKLORE_PORT}/api/v1/healthcheck
+      interval: 60s
+      retries: 5
+      start_period: 60s
+      timeout: 10s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.booklore-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.booklore-rtr.rule=Host(`booklore.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.booklore-rtr.service=booklore-svc"
+      - "traefik.http.services.booklore-svc.loadbalancer.server.port=${BOOKLORE_PORT}"
+      # Middlewares
+      - "traefik.http.routers.booklore-rtr.middlewares=chain-authentik@file"
+
+  mariadb:
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    container_name: mariadb
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${BOOKLORE_DB_USER}
+      - MYSQL_PASSWORD=${BOOKLORE_DB_PASSWORD}
+    networks:
+      - t3_proxy
+    volumes:
+      - ${CONTAINERSDIR}/mariadb/config:/config
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "mariadb-admin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10

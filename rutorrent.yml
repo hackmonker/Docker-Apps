@@ -1,0 +1,24 @@
+  rutorrent:
+    image: crazymax/rtorrent-rutorrent:latest
+    container_name: rutorrent
+    restart: unless-stopped
+    expose:
+      - 6881/udp
+      - 50000
+      - 8080
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOMAIN=${DOMAIN}
+      - MAX_FILE_UPLOADS=2
+    volumes:
+      - /opt/containers/rutorrent/data:/data
+      - /opt/containers/rutorrent/passwd:/passwd
+      - /mnt/local/Downloads:/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.rutorrent.rule=Host(`rutorrent.${DOMAIN}`)
+      - traefik.http.services.rutorrent.loadbalancer.server.port=8080
+      - traefik.http.routers.rutorrent.middlewares=authrutorrent
+      - traefik.http.middlewares.authrutorrent.basicauth.users=xd003:pass

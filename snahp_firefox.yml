@@ -1,0 +1,21 @@
+  firefox:
+    image: jlesage/firefox
+    container_name: firefox
+    restart: unless-stopped
+    expose:
+      - 5800
+    environment:
+      - USER_ID=${PUID}
+      - GROUP_ID=${PGID}
+      - TZ=${TZ}
+      - DARK_MODE=1
+      - KEEP_APP_RUNNING=1
+      - FF_OPEN_URL=https://fora.snahp.eu
+      - FF_KIOSK=1
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/firefox:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.firefox.rule=Host(`snahp.${DOMAIN}`)
+      - traefik.http.services.firefox.loadbalancer.server.port=5800

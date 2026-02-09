@@ -1,0 +1,21 @@
+  notifiarr:
+    container_name: notifiarr
+    hostname: notifiarr
+    image: golift/notifiarr
+    restart: unless-stopped
+    expose:
+      - 5454
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=${UMASK}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/notifiarr:/config
+      - /var/run/utmp:/var/run/utmp
+      - /etc/machine-id:/etc/machine-id
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.notifiarr.rule=Host(`notifiarr.${DOMAIN}`)
+      - traefik.http.services.notifiarr.loadbalancer.server.port=5454

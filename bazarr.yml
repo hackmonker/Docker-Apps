@@ -1,0 +1,20 @@
+  bazarr:
+    image: cr.hotio.dev/hotio/bazarr
+    container_name: bazarr
+    restart: unless-stopped
+    expose:
+      - 6767
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=${UMASK}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/bazarr:/config
+      - /mnt:/mnt #optional
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)
+      - traefik.http.services.bazarr.loadbalancer.server.port=6767
+    

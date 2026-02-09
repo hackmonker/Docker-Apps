@@ -1,0 +1,18 @@
+  calibre-web:
+    image: y484v/calibre
+    container_name: calibre-web
+    restart: unless-stopped
+    expose:
+      - 8083
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/calibreweb:/config
+      - /mnt/mergerfs/Media/Ebooks:/books
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.calibre-web.rule=Host(`books.${DOMAIN}`)
+      - traefik.http.services.calibre-web.loadbalancer.server.port=8083

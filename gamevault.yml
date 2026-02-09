@@ -1,0 +1,26 @@
+  gamevault:
+    image: phalcode/gamevault-backend:latest
+    container_name: gamevault
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOMAIN=${DOMAIN}
+      - DB_HOST=gamevault-db
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      # The following line grants Admin Role to the account with this username upon registration.
+      - SERVER_ADMIN_USERNAME=${ADMIN_USER}
+      # Uncomment and insert your RAWG API Key here if you have one (http://rawg.io/login?forward=developer)
+      - RAWG_API_KEY=${RAWG_API}
+    volumes:
+      # Mount the folder where your games are
+      - /mnt/mergerfs/Media/Games:/files
+      # Mount the folder where GameVault should store its images
+      - /opt/containers/gamevault:/images
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.gamevault.rule=Host(`games.${DOMAIN}`)
+      - traefik.http.services.gamevault.loadbalancer.server.port=8080

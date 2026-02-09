@@ -1,0 +1,21 @@
+  adguardhome:
+    image: adguard/adguardhome 
+    container_name: adguardhome
+    restart: unless-stopped
+    ports:
+      - 53:53
+      - 853:853
+    expose:
+      - 80
+      - 443
+      - 3000
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/adguard/data:/opt/adguardhome/work
+      - /opt/containers/adguard/config:/opt/adguardhome/conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.adguardhome.rule=Host(`adguard.${DOMAIN}`) || HostRegexp(`.+\.adguard\.xd003\.site`)
+      - traefik.http.services.adguardhome.loadbalancer.server.port=80

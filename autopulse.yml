@@ -1,0 +1,16 @@
+  autopulse:  
+    image: danonline/autopulse
+    container_name: autopulse
+    restart: unless-stopped
+    expose:
+      - 2875
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=${TZ}
+      - AUTOPULSE__APP__DATABASE_URL=postgres://autopulse:autopulse@postgres/autopulse
+    volumes:
+      - /opt/containers/autopulse/config.yaml:/app/config.yaml
+      - /mnt:/mnt
+    depends_on:
+      - postgres

@@ -1,0 +1,16 @@
+  jfa-go:
+    image: hrfee/jfa-go
+    container_name: jfa-go
+    restart: unless-stopped
+    expose:
+      - 8056
+    environment:
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/jfa-go:/data
+      - /opt/containers/jellyfin:/jf
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jfa-go.rule=Host(`invite.${DOMAIN}`)
+      - traefik.http.services.jfa-go.loadbalancer.server.port=8056

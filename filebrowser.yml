@@ -1,0 +1,18 @@
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    expose:
+      - 80
+    volumes:
+      - /opt/containers/filebrowser/backup:/srv
+      - /opt/containers/filebrowser/database.db:/database.db
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filebrowser.rule=Host(`fb.${DOMAIN}`)
+      - traefik.http.services.filebrowser.loadbalancer.server.port=80

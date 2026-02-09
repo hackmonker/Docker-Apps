@@ -1,0 +1,19 @@
+  pg-backup:
+    image: teldrive/rclone-backup:17
+    container_name: pg-backup
+    environment:
+      - RCLONE_REMOTE_NAME=gd # use your configured rclone remote name
+      - RCLONE_REMOTE_DIR=/pg-backup/
+      - BACKUP_FILE_SUFFIX=%d-%m-%y - %H:%M
+      - BACKUP_KEEP_DAYS=7 # how many days to keep backup history
+      - CRON=0 */6 * * * # backup frequency (every 6 hours in this example)
+      - ZIP_ENABLE=false # enable backup compression
+      - PG_HOST=postgres # database hostname
+      - PG_DBNAME=teldrive # database name
+      - PG_USERNAME=xd003 # database username
+      - PG_PASSWORD=69telebytes69 # database password
+      - ZIP_PASSWORD=zippass # password to protect backup archives
+      - TIMEZONE="IST"
+    restart: always
+    volumes:
+      - /home/ubuntu/.config/rclone/:/app/rclone # mount your rclone config directory

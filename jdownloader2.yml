@@ -1,0 +1,22 @@
+  jdownloader2:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader2
+    restart: unless-stopped    
+    expose:
+      - 5800
+    environment:
+      - USER_ID=${PUID}
+      - GROUP_ID=${PGID}
+      - TZ=${TZ}
+      - DARK_MODE=1
+      - MYJDOWNLOADER_EMAIL=${MYJDOWNLOADER_EMAIL}
+      - MYJDOWNLOADER_PASSWORD=${MYJDOWNLOADER_PASSWORD}
+      - MYJDOWNLOADER_DEVICE_NAME=${MYJDOWNLOADER_DEVICE_NAME}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/jdownloader-2:/config
+      - /mnt/local/Downloads:/output:rw
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jdownloader2.rule=Host(`jd.${DOMAIN}`)
+      - traefik.http.services.jdownloader2.loadbalancer.server.port=5800

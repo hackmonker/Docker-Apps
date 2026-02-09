@@ -1,0 +1,9 @@
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    restart: unless-stopped
+    user: 1000:1000
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - /opt/containers/recyclarr:/config

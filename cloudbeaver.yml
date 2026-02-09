@@ -1,0 +1,14 @@
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver
+    restart: always
+    expose:
+      - 8978
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/cloudbeaver/workspace:/opt/cloudbeaver/workspace
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.cloudbeaver.rule=Host(`db.${DOMAIN}`)
+      - traefik.http.services.cloudbeaver.loadbalancer.server.port=8978

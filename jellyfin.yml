@@ -1,0 +1,33 @@
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    expose:
+      - 8096
+    environment:
+      - PUID=0
+      - PGID=0
+      - UMASK=${UMASK}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/jellyfin:/config
+      - /mnt:/mnt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN}`)
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    user: 0:0
+    expose:
+      - 8096
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.xd003.cc
+    volumes:
+      - /opt/containers/jellyfin:/config
+      - /mnt:/mnt

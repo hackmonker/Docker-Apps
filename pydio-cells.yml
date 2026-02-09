@@ -1,0 +1,43 @@
+  pydio-cells:
+    image: lscr.io/linuxserver/pydio-cells:latest
+    container_name: pydio-cells
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOMAIN=${DOMAIN}
+      - EXTERNALURL=https://dl.${DOMAIN}
+    volumes:
+      - /opt/containers/pydio-cells/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pydio-cells.rule=Host(`dl.${DOMAIN}`)
+      - traefik.http.services.pydio-cells.loadbalancer.server.port=8080
+      - traefik.http.services.pydio-cells.loadbalancer.serverstransport=ignorecert@file
+      - traefik.http.services.pydio-cells.loadbalancer.server.scheme=https
+    depends_on:
+      - mariadb
+
+
+  pydio-cells:
+    image: pydio/cells:latest
+    container_name: pydio-cells
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      - DOMAIN=${DOMAIN}
+      - CELLS_INSTALL_YAML=/pydio/config/install.yml
+    volumes:
+      - /opt/containers/pydio-cells:/pydio
+      - /opt/containers/pydio-cells/cellsdir:/var/cells
+      - /opt/containers/pydio-cells/data:/var/cells/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pydio-cells.rule=Host(`dl.${DOMAIN}`)
+      - traefik.http.services.pydio-cells.loadbalancer.server.port=8080
+    depends_on:
+      - mariadb

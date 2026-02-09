@@ -1,0 +1,23 @@
+########################### NETWORKS
+networks:
+  default:
+    driver: bridge
+  socket_proxy:
+    name: socket_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: $SOCKET_PROXY_SUBNET
+  t3_proxy:
+    name: t3_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: $T3_PROXY_SUBNET
+
+########################### SECRETS
+secrets:
+  basic_auth_credentials:
+    file: $DOCKERDIR/auth
+  cf_dns_api_token:
+    file: $TOOLSDIR/cloudflare-dns/cf_token

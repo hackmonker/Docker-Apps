@@ -1,0 +1,8 @@
+  myspeed:
+    image: germannewsmaker/myspeed
+    container_name: myspeed
+    restart: unless-stopped
+    expose:
+      - 5216
+    volumes:
+      - /opt/containers/myspeed:/myspeed/data

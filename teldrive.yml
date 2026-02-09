@@ -1,0 +1,15 @@
+  teldrive:
+    image: ghcr.io/tgdrive/teldrive
+    container_name: teldrive
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - /opt/containers/teldrive/storage.db:/storage.db:rw
+      - /opt/containers/teldrive/config.toml:/config.toml
+    depends_on:
+      - postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.teldrive.rule=Host(`teldrive.${DOMAIN}`)
+      - traefik.http.services.teldrive.loadbalancer.server.port=8080

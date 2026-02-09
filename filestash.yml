@@ -1,0 +1,14 @@
+  filestash:
+    image: machines/filestash
+    container_name: filestash
+    restart: unless-stopped
+    expose:
+      - 8334
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - /opt/containers/filestash:/app/data/state/
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filestash.rule=Host(`dl.${DOMAIN}`)
+      - traefik.http.services.filestash.loadbalancer.server.port=8334

@@ -1,0 +1,17 @@
+  emby-notifier:
+    container_name: emby-notifier
+    image: hackmonker/emby-telegram-notifier
+    restart: unless-stopped
+    ports:
+      - 5000
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+      - EMBY_BASE_URL="https://emby.${DOMAIN}:443"
+      - EMBY_API_KEY=${EMBY_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - SEASON_ADDED_WITHIN_X_DAYS=${SEASON_ADDED_WITHIN_X_DAYS}
+      - EPISODE_PREMIERED_WITHIN_X_DAYS=${EPISODE_PREMIERED_WITHIN_X_DAYS}

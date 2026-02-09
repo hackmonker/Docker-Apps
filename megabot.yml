@@ -1,0 +1,20 @@
+  megabot:
+    image: ghcr.io/itz-fork/meganzbot
+    container_name: megabot
+    restart: unless-stopped
+    environment:
+      - APP_ID=1388228
+      - API_HASH=9a909615a38cfe119bc3ce586c09df8c
+      - BOT_TOKEN=7281619343:AAEot_yf5OK19Od9ConefUiffC4orPgKZV8
+      - MEGA_EMAIL=arjunsinhchudasama7.6@googlemail.com
+      - MEGA_PASSWORD=MEGA1MEGA
+      - AUTH_USERS=277334259
+      - USE_ENV=True
+      - LOG_CHAT=-1002194665773
+      - MONGO_URI=mongodb+srv://xd003:cvh9yhrbmh2gze0ZWN@megadl.l7zawim.mongodb.net/?retryWrites=true&w=majority&appName=megadl
+      - CYPHER_KEY=OgsnZDKhZrBwAG6VFQfAQ07UWuQLZMluta4HqwF11ZI=
+      - DOWNLOAD_LOCATION=/output/mega
+      - CHUNK_SIZE=1048576
+      - TG_MAX_SIZE=2040108421
+    volumes:
+      - /mnt/local:/output

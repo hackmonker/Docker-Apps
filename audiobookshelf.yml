@@ -1,0 +1,27 @@
+  audiobookshelf:
+    container_name: audiobookshelf
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOMAIN=${DOMAIN}
+    user: "${PUID}:${PGID}"
+    expose:
+      - 80
+    volumes:
+      - /mnt/mergerfs/Media/Audiobooks:/audiobooks
+      - /mnt/mergerfs/Media/Ebooks:/ebooks
+      - /mnt/mergerfs/Media/Podcasts:/podcasts
+      - /opt/containers/audiobookshelf/config:/config
+      - /opt/containers/audiobookshelf/metadata:/metadata
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.audiobookshelf-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.audiobookshelf-rtr.rule=Host(`audiobookshelf.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.audiobookshelf-rtr.service=audiobookshelf-svc"
+      - "traefik.http.services.audiobookshelf-svc.loadbalancer.server.port=${audiobookshelf_PORT}"
+      # Middlewares
+      - "traefik.http.routers.traefik-rtr.middlewares=chain-no-auth@file"

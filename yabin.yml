@@ -1,0 +1,16 @@
+  yabin:
+    image: 'yureien/yabin:latest'
+    container_name: yabin
+    restart: unless-stopped
+    expose:
+      - 3000
+    environment:
+      - DATABASE_URL=${YABIN_DB_URL}
+      - DOMAIN=${DOMAIN}
+      - PUBLIC_REGISRATION_ENABLED=false
+    depends_on:
+      - postgres
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.yabin.rule=Host(`paste.${DOMAIN}`)
+      - traefik.http.services.yabin.loadbalancer.server.port=3000
