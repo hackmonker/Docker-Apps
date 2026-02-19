@@ -10,6 +10,8 @@ services:
     user: "${PUID}:${PGID}"
     expose:
       - 80
+    networks:
+      - t3_proxy
     volumes:
       - /mnt/mergerfs/Media/Audiobooks:/audiobooks
       - /mnt/mergerfs/Media/Ebooks:/ebooks
