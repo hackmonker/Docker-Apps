@@ -1,0 +1,19 @@
+services:
+  bragi:
+    image: ghcr.io/djdembeck/bragibooks:main
+    container_name: bragi
+    environment:
+      - CSRF_TRUSTED_ORIGINS=
+      - LOG_LEVEL=INFO
+      - DEBUG=False
+      - UID=${PUID}
+      - GID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONTAINERSDIR}/bragi:/config
+      - ${TEMPDIR}/Audiobooks/untagged:/input
+      - /mnt/local/Media/Audiobooks:/output
+      - path/to/done:/done
+    ports:
+      - 8000:8000
+    restart: unless-stopped
