@@ -1,0 +1,13 @@
+services:
+  auto-m4b:
+    image: spencermksmith/auto-m4b
+    container_name: autom4b
+    volumes:
+      - ${CONTAINERSDIR}/autom4b:/config
+      - ${TEMPDIR}/Audiobooks:/temp
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - CPU_CORES=2
+      - SLEEPTIME=1m
+      - MAKE_BACKUP=Y
