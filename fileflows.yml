@@ -14,7 +14,7 @@ services:
       - PUID=$PUID
       - PGID=$PGID
     volumes:
-      - ${TEMP}/fileflows:/temp
+      - ${TEMPDIR}/fileflows:/temp
       - ${CONTAINERSDIR}/fileflows/data:/app/Data
       - ${CONTAINERSDIR}/fileflows/logs:/app/Logs
       - ${CONTAINERSDIR}/fileflows/common:/app/common
