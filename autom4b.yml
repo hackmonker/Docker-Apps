@@ -1,5 +1,5 @@
 services:
-  auto-m4b:
+  autom4b:
     image: spencermksmith/auto-m4b
     container_name: autom4b
     volumes:
