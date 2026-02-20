@@ -1,5 +1,6 @@
 services:
   fileflows:
+    container_name: fileflows
     image: revenz/fileflows
     restart: unless-stopped
     expose:
