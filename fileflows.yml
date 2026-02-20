@@ -1,0 +1,31 @@
+services:
+  fileflows:
+    image: revenz/fileflows
+    restart: unless-stopped
+    expose:
+      - 5000
+    networks:
+      - socket_proxy
+      - t3_proxy
+    environment:
+      - TempPathHost=${TEMP}/fileflows
+      - BROWSER_START_DIR=${CONTAINERSDIR}/fileflows/browser
+      - TZ=$TZ
+      - PUID=$PUID
+      - PGID=$PGID
+    volumes:
+      - ${TEMP}/fileflows:/temp
+      - ${CONTAINERSDIR}/fileflows/data:/app/Data
+      - ${CONTAINERSDIR}/fileflows/logs:/app/Logs
+      - ${CONTAINERSDIR}/fileflows/common:/app/common
+      - /mnt:/mnt
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.fileflows-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.fileflows-rtr.rule=Host(`fileflows.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.fileflows-rtr.service=fileflows-svc"
+      - "traefik.http.services.fileflows-svc.loadbalancer.server.port=5000"
+      # Middlewares
+      - "traefik.http.routers.fileflows-rtr.middlewares=chain-no-auth@file"
