@@ -13,7 +13,7 @@ services:
       - ${CONTAINERSDIR}/bragi:/config
       - ${TEMPDIR}/Audiobooks/untagged:/input
       - /mnt/local/Media/Audiobooks:/output
-      - /mnt/local/Media/Audiobooks/Donetest:/done
+      - ${TEMPDIR}/Audiobooks/Donetest:/done
     expose:
       - 8000
     networks:
