@@ -3,7 +3,7 @@ services:
     image: ghcr.io/djdembeck/bragibooks:main
     container_name: bragi
     environment:
-      - CSRF_TRUSTED_ORIGINS=
+      - CSRF_TRUSTED_ORIGINS=https://bragi.${DOMAINNAME}
       - LOG_LEVEL=INFO
       - DEBUG=False
       - UID=${PUID}
