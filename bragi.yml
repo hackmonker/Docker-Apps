@@ -13,7 +13,19 @@ services:
       - ${CONTAINERSDIR}/bragi:/config
       - ${TEMPDIR}/Audiobooks/untagged:/input
       - /mnt/local/Media/Audiobooks:/output
-      - path/to/done:/done
-    ports:
-      - 8000:8000
+      - /mnt/local/Media/Audiobooks/Donetest:/done
+    expose:
+      - 8000
+    networks:
+      - t3_proxy
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.bragi-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.bragi-rtr.rule=Host(`bragi.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.bragi-rtr.service=bragi-svc"
+      - "traefik.http.services.bragi-svc.loadbalancer.server.port=8000"
+      # Middlewares
+      - "traefik.http.routers.bragi-rtr.middlewares=chain-no-auth@file"
