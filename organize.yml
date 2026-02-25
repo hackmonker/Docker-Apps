@@ -11,6 +11,8 @@ services:
       - ORGANIZE_CONFIG=/organize/config.yml
       - LOG_FILE=/organize/organizer.log
       - DEBOUNCE_SECONDS=15
+      - LOG_MAX_SIZE_MB=10
+      - LOG_BACKUPS=3
     volumes:
       - ${CONTAINERSDIR}/organize:/organize
       - /mnt:/mnt
