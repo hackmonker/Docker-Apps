@@ -3,8 +3,9 @@ services:
     image: hackmonker/organize:main
     container_name: organize
     restart: unless-stopped
-    user: "${PUID}:${PGID}"
     environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - HOME=/tmp
       - WATCH_DIRS=${WATCH_DIRS}
       - ORGANIZE_CONFIG=/organize/config.yml
