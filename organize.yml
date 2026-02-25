@@ -1,6 +1,6 @@
 services:
   organize:
-    image: hackmonker/organize:latest
+    image: hackmonker/organize:main
     container_name: organize
     restart: unless-stopped
     user: "${PUID}:${PGID}"
