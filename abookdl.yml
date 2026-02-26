@@ -1,0 +1,21 @@
+services:
+  abookdl:
+    container_name: abookdl
+    image: hackmonker/abookdl:main
+    expose:
+      - 8000
+    networks:
+      - t3_proxy
+    volumes:
+      - ${CONTAINERSDIR}/abookdl:/app/Audiobooks
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.abookdl-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.abookdl-rtr.rule=Host(`abookdl.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.abookdl-rtr.service=abookdl-svc"
+      - "traefik.http.services.abookdl-svc.loadbalancer.server.port=8000"
+      # Middlewares
+      - "traefik.http.routers.abookdl-rtr.middlewares=chain-no-auth@file"
