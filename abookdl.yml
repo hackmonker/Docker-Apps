@@ -7,7 +7,10 @@ services:
     networks:
       - t3_proxy
     volumes:
-      - ${CONTAINERSDIR}/abookdl:/app/Audiobooks
+      - PUID:${PUID}
+      - PGID:${PGID}
+      - /mnt/local/Downloads/Temp/abookdl:/temp
+      - /mnt/local/Downloads/Completed/Audiobooks:/completed
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
