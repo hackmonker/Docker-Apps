@@ -1,0 +1,25 @@
+services:
+  storyteller:
+    container_name: storyteller
+    image: registry.gitlab.com/storyteller-platform/storyteller:latest
+    volumes:
+      - ${CONTAINERSDIR}/storyteller:/data:rw
+      - /mnt/mergerfs/stroyteller:/library
+    environment:
+      - STORYTELLER_SECRET_KEY_FILE=/run/secrets/storyteller_secret_key
+    expose:
+      - 8001
+    networks:
+      - t3_proxy
+    secrets:
+      - storyteller_secret_key
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.storyteller-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.storyteller-rtr.rule=Host(`storyteller.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.storyteller-rtr.service=storyteller-svc"
+      - "traefik.http.services.storyteller-svc.loadbalancer.server.port=8001"
+      # Middlewares
+      - "traefik.http.routers.storyteller-rtr.middlewares=chain-no-auth@file"
