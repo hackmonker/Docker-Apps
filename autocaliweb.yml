@@ -13,7 +13,7 @@ services:
       - PGID=${PGID}
     volumes:
       - ${CONTAINERSDIR}/autocaliweb:/config
-      - /mnt/local/Processing/Ebooks:/acw-book-ingest
+      - /mnt/local/Downloads/Processing/Ebooks:/acw-book-ingest
       - /mnt/mergerfs/Media/Ebooks:/calibre-library
     stop_signal: SIGINT
     stop_grace_period: 15s
