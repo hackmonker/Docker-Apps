@@ -1,0 +1,29 @@
+services:
+  autocaliweb:
+    image: gelbphoenix/autocaliweb:latest
+    container_name: autocaliweb
+    restart: unless-stopped
+    expose:
+      - 8083
+    networks:
+      - t3_proxy
+    environment:
+      - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${CONTAINERSDIR}/autocaliweb:/config
+      - /mnt/local/Processing/Ebooks:/acw-book-ingest
+      - /mnt/mergerfs/Media/Ebooks:/calibre-library
+    stop_signal: SIGINT
+    stop_grace_period: 15s
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.autocaliweb-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.autocaliweb-rtr.rule=Host(`autocaliweb.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.autocaliweb-rtr.service=autocaliweb-svc"
+      - "traefik.http.services.autocaliweb-svc.loadbalancer.server.port=8083"
+      # Middlewares
+      - "traefik.http.routers.autocaliweb-rtr.middlewares=chain-no-auth@file"
