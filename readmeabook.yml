@@ -1,0 +1,31 @@
+services:
+  readmeabook:
+    image: ghcr.io/kikootwo/readmeabook:latest
+    container_name: readmeabook
+    restart: unless-stopped
+    expose:
+      - 3030
+    networks:
+      - t3_proxy
+    volumes:
+      - ${CONTAINERSDIR}/readmeabook/config:/app/config
+      - ${CONTAINERSDIR}/readmeabook/cache:/app/cache
+      - /mnt/feeder/audiobooks:/downloads        # Your download client's path
+      - /mnt/mergerfs/Media:/media                # Your audiobook library
+      - ${CONTAINERSDIR}/readmeabook/pgdata:/var/lib/postgresql/data
+      - ${CONTAINERSDIR}/readmeabook/redis:/var/lib/redis
+    environment:
+      - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
+      - PUID=${PUID}
+      - PGID=${PGID}                   # Optional: your group ID
+      - PUBLIC_URL="https://rmab.$DOMAINNAME"  # Required for OAuth
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.rmab-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.rmab-rtr.rule=Host(`rmab.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.rmab-rtr.service=rmab-svc"
+      - "traefik.http.services.rmab-svc.loadbalancer.server.port=3030"
+      # Middlewares
+      - "traefik.http.routers.rmab-rtr.middlewares=chain-no-auth@file"
