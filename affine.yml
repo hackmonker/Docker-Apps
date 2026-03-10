@@ -5,6 +5,8 @@ services:
     container_name: affine_server
     expose:
       - 3010
+    networks:
+      - t3_proxy
     depends_on:
       redis:
         condition: service_healthy
@@ -21,6 +23,16 @@ services:
       - DATABASE_URL=${AFFINE_DB_URL}
       - AFFINE_INDEXER_ENABLED=false
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.affine-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.affine-rtr.rule=Host(`affine.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.affine-rtr.service=affine-svc"
+      - "traefik.http.services.affine-svc.loadbalancer.server.port=3010"
+      # Middlewares
+      - "traefik.http.routers.affine-rtr.middlewares=chain-no-auth@file"
 
   affine_migration:
     image: ghcr.io/toeverything/affine:stable
