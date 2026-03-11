@@ -1,4 +1,5 @@
 services:
+
   authentik-server:
     image: ghcr.io/goauthentik/server:${AUTHENTIKSERVER_VERSION_PIN_DEFAULT}
     container_name: authentik-server
@@ -43,3 +44,38 @@ services:
       # HTTP Services
       - "traefik.http.routers.authentik-rtr.service=authentik-svc"
       - "traefik.http.services.authentik-svc.loadbalancer.server.port=9000"
+
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:${AUTHENTIKWORKER_VERSION_PIN_DEFAULT}
+    container_name: authentik-worker
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - t3_proxy
+      - socket_proxy
+      - internal
+    expose:
+      - 9000
+      # - "9443:9443" # HTTPS
+    command: worker
+    user: ${PUID}:${PGID}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DOCKER_HOST
+      - AUTHENTIK_POSTGRESQL__HOST=postgres
+      - AUTHENTIK_POSTGRESQL__NAME=authentik
+      - AUTHENTIK_POSTGRESQL__USER=${POSTGRES_USER}
+      - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD}
+      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_KEY}
+      - AUTHENTIK_LOG_LEVEL=info # debug, info, warning, error, trace
+      - AUTHENTIK_DISABLE_STARTUP_ANALYTICS=true
+      - AUTHENTIK_DISABLE_UPDATE_CHECK=false
+      - AUTHENTIK_ERROR_REPORTING__ENABLED=false
+    volumes:
+      - $CONTAINERSDIR/authentik/media:/media
+      - $CONTAINERSDIR/authentik/custom-templates:/templates
+      - $CONTAINERSDIR/authentik/data:/data
+      # - $DOCKERDIR/appdata/authentik/geoip/data:/geoip # requires geoipupdate
