@@ -1,0 +1,33 @@
+services:
+  calibre:
+    image: lscr.io/linuxserver/calibre:latest
+    container_name: calibre
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
+      - PASSWORD= #optional
+      - CLI_ARGS= #optional
+    volumes:
+      - ${CONTAINERSDIR}/calibre:/config
+      - /mnt:/mnt
+    expose:
+      - 8080
+      - 8181
+      - 8081
+    networks:
+      - t3_proxy
+    shm_size: "1gb"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.calibre-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.calibre-rtr.rule=Host(`calibre.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.calibre-rtr.service=calibre-svc"
+      - "traefik.http.services.calibre-svc.loadbalancer.server.port=8083"
+      # Middlewares
+      - "traefik.http.routers.calibre-rtr.middlewares=chain-no-auth@file"
