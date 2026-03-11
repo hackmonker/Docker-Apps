@@ -4,7 +4,8 @@ services:
     image: registry.gitlab.com/storyteller-platform/storyteller:latest
     volumes:
       - ${CONTAINERSDIR}/storyteller:/data:rw
-      - /mnt/mergerfs/stroyteller:/library
+      - /mnt/storyteller:/library
+      - /mnt/local/Media/Readalouds:/readalouds
     environment:
       - STORYTELLER_SECRET_KEY_FILE=/run/secrets/storyteller_secret_key
     expose:

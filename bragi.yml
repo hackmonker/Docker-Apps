@@ -1,6 +1,6 @@
 services:
   bragi:
-    image: ghcr.io/djdembeck/bragibooks:main
+    image: hackmonker/bragibooks:main
     container_name: bragi
     environment:
       - CSRF_TRUSTED_ORIGINS=https://bragi.${DOMAINNAME}
@@ -13,7 +13,7 @@ services:
       - ${CONTAINERSDIR}/bragi:/config
       - /mnt/local/Downloads/Processing/Audiobooks/Untagged:/input
       - /mnt/local/Media/Audiobooks:/output
-      - /mnt/local/Downloads/Processing/Audiobooks/Original:/done
+      - /mnt/local/Downloads/Processing/Audiobooks/Originals:/done
     expose:
       - 8000
     networks:

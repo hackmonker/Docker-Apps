@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     networks:
       - t3_proxy
+      - internal
     expose:
       - 9000
       # - "9443:9443" # HTTPS

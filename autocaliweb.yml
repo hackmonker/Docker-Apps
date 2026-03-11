@@ -1,6 +1,6 @@
 services:
   autocaliweb:
-    image: gelbphoenix/autocaliweb:latest
+    image: gelbphoenix/autocaliweb:dev
     container_name: autocaliweb
     restart: unless-stopped
     expose:

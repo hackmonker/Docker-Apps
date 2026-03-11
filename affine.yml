@@ -1,12 +1,12 @@
-name: affine
 services:
   affine:
-    image: ghcr.io/toeverything/affine:stable
-    container_name: affine_server
+    container_name: affine
+    image: ghcr.io/toeverything/affine:0.26.3
     expose:
       - 3010
     networks:
       - t3_proxy
+      - internal
     depends_on:
       redis:
         condition: service_healthy
@@ -35,7 +35,7 @@ services:
       - "traefik.http.routers.affine-rtr.middlewares=chain-no-auth@file"
 
   affine_migration:
-    image: ghcr.io/toeverything/affine:stable
+    image: ghcr.io/toeverything/affine:0.26.3
     container_name: affine_migration
     volumes:
       # custom configurations
@@ -46,6 +46,8 @@ services:
       - REDIS_SERVER_HOST=redis
       - DATABASE_URL=${AFFINE_DB_URL}
       - AFFINE_INDEXER_ENABLED=false
+    networks:
+      - internal
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,3 +63,5 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    networks:
+      - internal

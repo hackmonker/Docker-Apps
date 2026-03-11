@@ -6,9 +6,12 @@ services:
       - 8000
     networks:
       - t3_proxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOWNLOAD_TEMP_DIR=/temp
+      - DOWNLOAD_COMPLETED_DIR=/completed
     volumes:
-      - PUID:${PUID}
-      - PGID:${PGID}
       - /mnt/local/Downloads/Temp/abookdl:/temp
       - /mnt/local/Downloads/Completed/Audiobooks:/completed
     restart: unless-stopped

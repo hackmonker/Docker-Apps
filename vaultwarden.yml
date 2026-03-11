@@ -9,6 +9,7 @@ services:
        - 80
     networks:
       - t3_proxy
+      - internal
     user: ${PUID}:${PGID}
     environment:
       - TZ=Asia/Kolkata
