@@ -15,6 +15,7 @@ services:
       - ${CONTAINERSDIR}/autocaliweb:/config
       - /mnt/local/Downloads/Processing/Ebooks:/acw-book-ingest
       - /mnt/mergerfs/Media/Ebooks:/calibre-library
+      - ${CONTAINERSDIR}/calibre:/calibre
     stop_signal: SIGINT
     stop_grace_period: 15s
     labels:
