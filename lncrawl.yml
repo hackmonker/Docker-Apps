@@ -11,3 +11,13 @@ services:
     volumes:
       - ${CONTAINERSDIR}/incrawl:/data
       - /mnt/local/Downloads/Temp/lncrawl:/lnbooks
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.lncrawl-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.lncrawl-rtr.rule=Host(`lncrawl.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.lncrawl-rtr.service=lncrawl-svc"
+      - "traefik.http.services.lncrawl-svc.loadbalancer.server.port=8080"
+      # Middlewares
+      - "traefik.http.routers.lncrawl-rtr.middlewares=chain-no-auth@file"
