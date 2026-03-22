@@ -3,9 +3,6 @@ services:
     container_name: lncrawl
     image: ghcr.io/lncrawl/lightnovel-crawler
     restart: unless-stopped
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
     user: "${PUID}:${PGID}"
     expose:
       - 8080
