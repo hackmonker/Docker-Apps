@@ -1,0 +1,16 @@
+services:
+  lncrawl:
+    container_name: lncrawl
+    image: ghcr.io/lncrawl/lightnovel-crawler
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    user: "${PUID}:${PGID}"
+    expose:
+      - 8080
+    networks:
+      - t3_proxy
+    volumes:
+      - ${CONTAINERSDIR}/incrawl:/data
+      - /mnt/local/Downloads/Temp/lncrawl:/lnbooks
