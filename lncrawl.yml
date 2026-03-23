@@ -1,16 +1,25 @@
 services:
   lncrawl:
     container_name: lncrawl
-    image: ghcr.io/lncrawl/lightnovel-crawler
+    image: ghcr.io/lncrawl/lightnovel-crawler:latest
     restart: unless-stopped
-    user: "${PUID}:${PGID}"
     expose:
       - 8080
+    command: -ll server
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PUID: ${PUID}
+      PGID: ${PGID}      
+      LNCRAWL_DATA_PATH: /data
+      DATABASE_URL: postgresql+psycopg://hackmonker:IAMHERO@postgres:5432/lncrawl
+    volumes:
+      - ${CONTAINERSDIR}/lncrawl:/data
+      - /mnt/local/Downloads/Processing/lncrawl:/data/novels
+    depends_on:
+      - postgres
     networks:
       - t3_proxy
-    volumes:
-      - ${CONTAINERSDIR}/incrawl:/data
-      - /mnt/local/Downloads/Temp/lncrawl:/lnbooks
+      - internal
     labels:
       - "traefik.enable=true"
       # HTTP Routers
