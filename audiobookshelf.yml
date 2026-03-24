@@ -13,10 +13,10 @@ services:
     networks:
       - t3_proxy
     volumes:
-      - /mnt/mergerfs/Media/Audiobooks:/audiobooks
-      - /mnt/mergerfs/Media/Ebooks:/ebooks
-      - /mnt/mergerfs/Media/Webnovels:/wn
-      - /mnt/mergerfs/Media/Podcasts:/podcasts
+      - /mnt/mergerfs/media/Audiobooks:/audiobooks
+      - /mnt/mergerfs/media/Ebooks:/ebooks
+      - /mnt/mergerfs/media/Webnovels:/wn
+      - /mnt/mergerfs/media/Podcasts:/podcasts
       - /opt/containers/audiobookshelf/config:/config
       - /opt/containers/audiobookshelf/metadata:/metadata
     labels:

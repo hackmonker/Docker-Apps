@@ -14,7 +14,7 @@ services:
       DATABASE_URL: postgresql+psycopg://hackmonker:IAMHERO@postgres:5432/lncrawl
     volumes:
       - ${CONTAINERSDIR}/lncrawl:/data
-      - /mnt/local/Downloads/Processing/lncrawl:/data/novels
+      - /mnt/local/downloads/temp/lncrawl:/data/novels
     depends_on:
       - postgres
     networks:

@@ -1,6 +1,6 @@
 services:
   autocaliweb:
-    image: gelbphoenix/autocaliweb:dev
+    image: gelbphoenix/autocaliweb:latest
     container_name: autocaliweb
     restart: unless-stopped
     expose:
@@ -11,10 +11,12 @@ services:
       - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
       - PUID=${PUID}
       - PGID=${PGID}
+      - CALIBRE_OVERRIDE_DATABASE_PATH=/calibre/database/metadata.db
+      - WATCH_MODE=poll
     volumes:
       - ${CONTAINERSDIR}/autocaliweb:/config
-      - /mnt/local/Downloads/Processing/Ebooks:/acw-book-ingest
-      - /mnt/mergerfs/Media/Ebooks:/calibre-library
+      - /mnt/local/downloads/completed/ebooks:/acw-book-ingest
+      - /mnt/mergerfs/media/Ebooks:/calibre-library
       - ${CONTAINERSDIR}/calibre:/calibre
     stop_signal: SIGINT
     stop_grace_period: 15s

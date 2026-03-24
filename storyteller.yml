@@ -5,7 +5,7 @@ services:
     volumes:
       - ${CONTAINERSDIR}/storyteller:/data:rw
       - /mnt/storyteller:/library
-      - /mnt/local/Media/Readalouds:/readalouds
+      - /mnt/local/media/Readalouds:/readalouds
     environment:
       - STORYTELLER_SECRET_KEY_FILE=/run/secrets/storyteller_secret_key
     expose:

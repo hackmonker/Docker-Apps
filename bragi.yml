@@ -11,9 +11,9 @@ services:
       - TZ=${TZ}
     volumes:
       - ${CONTAINERSDIR}/bragi:/config
-      - /mnt/local/Downloads/Processing/Audiobooks/Untagged:/input
-      - /mnt/local/Media/Audiobooks:/output
-      - /mnt/local/Downloads/Processing/Audiobooks/Originals:/done
+      - /mnt/local/downloads/temp/bragi/untagged:/input
+      - /mnt/local/media/Audiobooks:/output
+      - /mnt/local/downloads/temp/bragi/originals:/done
     expose:
       - 8000
     networks:

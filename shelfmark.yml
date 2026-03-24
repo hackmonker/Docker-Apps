@@ -14,9 +14,9 @@ services:
       - t3_proxy
     restart: unless-stopped
     volumes:
-      - /mnt/local/Downloads/Completed/Ebooks:/books # Default destination for book downloads
-      - /mnt/local/Downloads/Temp/Ebooks:/tmp/shelfmark
-      - /mnt/local/Downloads/Completed/Audiobooks:/audiobooks # Default destination for abook downloads
+      - /mnt/local/downloads/completed/ebooks:/books # Default destination for book downloads
+      - /mnt/local/downloads/temp/shelfmark:/tmp/shelfmark
+      - /mnt/local/downloads/completed/audiobooks:/audiobooks # Default destination for abook downloads
       - $CONTAINERSDIR/shelfmark:/config
       - $CONTAINERSDIR/shelfmark/logs:/var/log # App configuration
       # Required for torrent / usenet - path must match your download client's volume exactly

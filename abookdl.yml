@@ -12,8 +12,8 @@ services:
       - DOWNLOAD_TEMP_DIR=/temp
       - DOWNLOAD_COMPLETED_DIR=/completed
     volumes:
-      - /mnt/local/Downloads/Temp/abookdl:/temp
-      - /mnt/local/Downloads/Completed/Audiobooks:/completed
+      - /mnt/local/downloads/temp/abookdl:/temp
+      - /mnt/local/downloads/completed/audiobooks:/completed
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
