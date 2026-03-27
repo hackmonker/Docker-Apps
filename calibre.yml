@@ -10,9 +10,10 @@ services:
       - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
       - PASSWORD= #optional
       - CLI_ARGS= #optional
+      - CALIBRE_OVERRIDE_DATABASE_PATH=/config/database/metadata.db #optional
     volumes:
       - ${CONTAINERSDIR}/calibre:/config
-      - /mnt:/mnt
+      - /mnt/mergerfs/media/Ebooks/:/calibre-library
     expose:
       - 8080
       - 8181
@@ -28,6 +29,6 @@ services:
       - "traefik.http.routers.calibre-rtr.rule=Host(`calibre.$DOMAINNAME`)"
       # HTTP Services
       - "traefik.http.routers.calibre-rtr.service=calibre-svc"
-      - "traefik.http.services.calibre-svc.loadbalancer.server.port=8083"
+      - "traefik.http.services.calibre-svc.loadbalancer.server.port=8080"
       # Middlewares
       - "traefik.http.routers.calibre-rtr.middlewares=chain-no-auth@file"
