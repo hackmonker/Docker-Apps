@@ -1,0 +1,37 @@
+services:
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web-automated
+    environment:
+      - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
+      - PUID=${PUID}
+      - PGID=${PGID}
+      # Hardcover API Key required for Hardcover as a Metadata Provider, get one here: https://docs.hardcover.app/api/getting-started/
+      - HARDCOVER_TOKEN=${HARDCOVER_TOKEN}
+      # If your library is on a network share (e.g., NFS/SMB), disable WAL to reduce locking issues
+      # Accepts: true/false (default: false)
+      - NETWORK_SHARE_MODE=false
+      # Override the default port (8083) for the web server.
+      # Accepts any valid port number.
+      - CWA_PORT_OVERRIDE=8083
+    volumes:
+      # CW users migrating should stop their existing CW instance, make a copy of the config folder, and bind that here to carry over all of their user settings ect.
+      - ${CONTAINERSDIR}/calibreweb:/config
+      - /mnt/local/downloads/completed/ebooks:/cwa-book-ingest
+      - /mnt/mergerfs/media/Ebooks:/calibre-files
+      - ${CONTAINERSDIR}/calibre/database:/calibre-library
+      - ${CONTAINERSDIR}/calibre/.config/calibre/plugins:/config/.config/calibre/plugins
+    expose:
+      # Change the first number to change the port you want to access the Web UI, not the second
+      - 8083
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # HTTP Routers
+      - "traefik.http.routers.calibreweb-rtr.entrypoints=websecure-internal,websecure-external"
+      - "traefik.http.routers.calibreweb-rtr.rule=Host(`calibreweb.$DOMAINNAME`)"
+      # HTTP Services
+      - "traefik.http.routers.calibreweb-rtr.service=calibreweb-svc"
+      - "traefik.http.services.calibreweb-svc.loadbalancer.server.port=8083"
+      # Middlewares
+      - "traefik.http.routers.calibreweb-rtr.middlewares=chain-no-auth@file"
