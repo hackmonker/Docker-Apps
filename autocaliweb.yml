@@ -11,13 +11,12 @@ services:
       - TZ=${TZ} # Change to your specific timezone (e.g. Europe/Berlin, America/Denver)
       - PUID=${PUID}
       - PGID=${PGID}
-      - CALIBRE_OVERRIDE_DATABASE_PATH=/calibre/database/metadata.db
       - WATCH_MODE=poll
     volumes:
       - ${CONTAINERSDIR}/autocaliweb:/config
       - /mnt/local/downloads/completed/ebooks:/acw-book-ingest
-      - /mnt/mergerfs/media/Ebooks:/calibre-library
-      - ${CONTAINERSDIR}/calibre:/calibre
+      - /mnt/mergerfs/media/Ebooks:/calibre-files
+      - ${CONTAINERSDIR}/calibre/database:/calibre-library
     stop_signal: SIGINT
     stop_grace_period: 15s
     labels:
