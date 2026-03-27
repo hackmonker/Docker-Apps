@@ -1,5 +1,5 @@
 services:
-  calibre-web-automated:
+  cwa:
     image: crocodilestick/calibre-web-automated:latest
     container_name: calibre-web-automated
     environment:
