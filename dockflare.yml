@@ -62,10 +62,3 @@ services:
       - $CONTAINERSDIR/dockflare/redis:/data
     networks:
       - dockflare-internal
-
-networks:
-  cloudflare-net:
-    name: cloudflare-net
-    external: true
-  dockflare-internal:
-    name: dockflare-internal
