@@ -1,0 +1,71 @@
+services:
+
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.1
+    container_name: docker-socket-proxy
+    restart: unless-stopped
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - CONTAINERS=1
+      - EVENTS=1
+      - NETWORKS=1
+      - IMAGES=1
+      - POST=1
+      - PING=1
+      - INFO=1
+      - EXEC=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dockflare-internal
+
+  dockflare-init:
+    image: alpine:3.20
+    command: ["sh", "-c", "chown -R $PUID:$PGID /app/data"]
+    volumes:
+      - $CONTAINERSDIR/dockflare/data:/app/data
+    networks:
+      - dockflare-internal
+    restart: "no"
+
+  dockflare:
+    image: alplat/dockflare:stable
+    container_name: dockflare
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - $CONTAINERSDIR/dockflare/data:/app/data
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_DB_INDEX=0  # Optional: specify Redis database index (0-15) for isolation from other containers
+      - DOCKER_HOST=tcp://docker-socket-proxy:2375
+      - DOCKFLARE_UID=${PUID}
+      - DOCKFLARE_GID=${PGID}
+    depends_on:
+      docker-socket-proxy:
+        condition: service_started
+      dockflare-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+    networks:
+      - cloudflare-net
+      - dockflare-internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: dockflare-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    volumes:
+      - $CONTAINERSDIR/dockflare/redis:/data
+    networks:
+      - dockflare-internal
+
+networks:
+  cloudflare-net:
+    name: cloudflare-net
+    external: true
+  dockflare-internal:
+    name: dockflare-internal
